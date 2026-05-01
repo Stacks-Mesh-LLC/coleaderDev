@@ -495,6 +495,10 @@ export function useChat({
 
 					for await (const obj of ndjsonStream(response.stream)) {
                         logger.debug('Received chunk from server:', obj);
+						if (obj.error) {
+							logger.error('Received error from server:', obj.error);
+							throw new Error(obj.error);
+						}
 						if (obj.chunk) {
 							if (!startedBlueprintStream) {
 								sendMessage(createAIMessage('main', 'Blueprint is being generated...', true));
@@ -596,6 +600,11 @@ export function useChat({
 				// Allow retry on failure
 				connectionStatus.current = 'idle';
 				logger.error('Error initializing code generation:', error);
+				
+				const errorMessage = error instanceof Error ? error.message : String(error);
+				toast.error(`Initialization failed: ${errorMessage}`);
+				setMessages(prev => [...prev, createAIMessage('main', `Failed to initialize the agent. Error: ${errorMessage}`)]);
+				
 				if (error instanceof RateLimitExceededError) {
 					const rateLimitMessage = handleRateLimitError(error.details, onDebugMessage);
 					setMessages(prev => [...prev, rateLimitMessage]);

@@ -4,7 +4,7 @@
  */
  {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "vibesdk-dev",
+	"name": "vibesdk-production",
 	"main": "worker/index.ts",
 	"compatibility_date": "2025-08-10",
 	"compatibility_flags": ["nodejs_compat"],
@@ -17,6 +17,9 @@
 		// "run_worker_first": ["!/src/*", "!/api/docs/*"],
         "run_worker_first": true,
         "binding": "ASSETS"
+	},
+	"dev": {
+		"enable_containers": true
 	},
 	"observability": {
 		"enabled": true,
@@ -104,7 +107,7 @@
       {
         "binding": "TEMPLATES_BUCKET",
         "bucket_name": "vibesdk-templates",
-        "remote": true,"preview_bucket_name": "vibesdk-templates"
+        "remote": true
       }
     ],
     "kv_namespaces": [
@@ -140,13 +143,18 @@
 	],
 	"routes": [
         {
-            "pattern": "coleader.dev",
+            "pattern": "build.cloudflare.dev",
             "custom_domain": true
+        },
+        {
+            "pattern": "*build-preview.cloudflare.dev/*",
+            "custom_domain": false,
+            "zone_id": "db01fac4261b2604aacad8410443a3e2"
         }
     ],
 	"vars": {
         "TEMPLATES_REPOSITORY": "https://github.com/cloudflare/vibesdk-templates",
-        "ALLOWED_EMAIL": "ahmedyasin.social@gmail.com",
+        "ALLOWED_EMAIL": "",
         "DISPATCH_NAMESPACE": "vibesdk-default-namespace",
         "ENABLE_READ_REPLICAS": "true",
         "CLOUDFLARE_AI_GATEWAY": "vibesdk-gateway",
@@ -164,9 +172,9 @@
             },
             "version": "1.0.0"
         },
-        "CUSTOM_DOMAIN": "coleader.dev",
+        "CUSTOM_DOMAIN": "",
         "MAX_SANDBOX_INSTANCES": "10",
-        "SANDBOX_INSTANCE_TYPE": "standard-4"
+        "SANDBOX_INSTANCE_TYPE": "standard-3"
     },
 	"workers_dev": false,
 	"preview_urls": false
