@@ -5,7 +5,6 @@
 import type {  AuthUser } from '../types/auth-types';
 import type { User } from '../database/schema';
 import { createLogger } from '../logger';
-
 const logger = createLogger('AuthUtils');
 
 /**
@@ -154,6 +153,7 @@ export interface CookieOptions {
  * Create secure cookie string with all options
  */
 export function createSecureCookie(options: CookieOptions): string {
+	// Default to secure=true, can be overridden by caller if needed
 	const {
 		name,
 		value,
